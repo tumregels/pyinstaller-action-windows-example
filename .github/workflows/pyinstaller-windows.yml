@@ -23,3 +23,15 @@ jobs:
         name: my-exe
         path: src/dist/windows # or path/to/artifact
 
+    - run:   |
+            upload_url=$(curl -sL https://api.github.com/repos/actions/checkout/releases/latest | jq -r '.upload_url')
+            echo ::set-env name=UPLOAD_URL::$upload_url
+      shell: bash
+
+    - run: echo ${{ env.UPLOAD_URL }}
+      shell: bash
+
+    - uses: actions/upload-release-asset@v1
+      with:
+      upload_url: ${{ env.UPLOAD_URL }}
+
